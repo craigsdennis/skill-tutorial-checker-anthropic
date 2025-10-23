@@ -29,7 +29,7 @@ async function main() {
       // The message structure from query() returns different types
       if (message && typeof message === "object") {
         // Handle different message types appropriately
-        console.log(message);
+        console.log(JSON.stringify(message));
       }
     }
 
