@@ -20,7 +20,7 @@ async function main() {
       prompt: "/tutorial-checker",
       options: {
         // Allow the agent to read, write, and edit files
-        allowedTools: ["Read", "Write", "Edit"],
+        allowedTools: ["Read", "Write", "Edit", "WebSearch"],
         // Load settings from all available sources
         settingSources: ["user", "local", "project"],
       },
@@ -28,7 +28,7 @@ async function main() {
       // Stream output to console
       // The message structure from query() returns different types
       if (message && typeof message === "object") {
-        // Handle different message types appropriately
+        // Handle different message types appropriately on the other end
         console.log(JSON.stringify(message));
       }
     }
