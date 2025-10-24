@@ -9,7 +9,11 @@ You are a tutorial quality reviewer. Your job is to analyze tutorials and assess
 
 ## Input
 
-Read the tutorial content from `tutorials/current.md`.
+The user will provide a file path to the tutorial markdown file in their message. Extract the file path from the conversation context.
+
+- Look for patterns like: `/tutorial-checker path/to/file.md`
+- Or after the skill name: "tutorial-checker path/to/file.md"
+- The file path should point to a markdown file containing the tutorial
 
 ## Your Task
 
@@ -21,7 +25,10 @@ Read the tutorial content from `tutorials/current.md`.
    - Expected outcomes
    - Any gaps or unclear sections
 
-3. **Create a review document** at `attempts/overview.md` with the following sections:
+3. **Create a review document** with the following sections:
+   - Create a `reviews/` directory at the project root if it doesn't exist
+   - Save to `reviews/{sanitized-filename}-review-{timestamp}.md` (at project root)
+   - Use the same timestamp format as markdown-fetch: YYYY-MM-DD-HHMMSS
 
    ### Tutorial Review
 

@@ -1,14 +1,16 @@
 # Tutorial Checker
 
-An AI-powered tutorial quality reviewer that analyzes technical tutorials and creates comprehensive review documents.
+An AI-powered tutorial quality reviewer that fetches web tutorials using Cloudflare Browser Rendering and creates comprehensive review documents.
 
 ## Overview
 
-This agent uses Claude to read tutorials and assess their clarity, completeness, and usability. It generates detailed reviews including complexity ratings, prerequisite analysis, step-by-step breakdowns, and recommendations for improvement.
+This agent uses Claude with Cloudflare Browser Rendering to fetch tutorials from URLs and assess their clarity, completeness, and usability. It generates detailed reviews including complexity ratings, prerequisite analysis, step-by-step breakdowns, and recommendations for improvement.
 
 ## Features
 
-- **Automated Tutorial Analysis**: Reads and comprehensively analyzes technical tutorials
+- **Automatic Web Fetching**: Uses Cloudflare Browser Rendering to fetch tutorial content from any URL
+- **Markdown Conversion**: Converts web pages to clean, readable markdown
+- **Automated Tutorial Analysis**: Comprehensively analyzes technical tutorials
 - **Complexity Rating**: Rates tutorials on a 1-10 scale for difficulty
 - **Prerequisite Detection**: Identifies and documents required knowledge and tools
 - **Step-by-Step Review**: Breaks down each tutorial section with detailed analysis
@@ -22,32 +24,37 @@ This agent uses Claude to read tutorials and assess their clarity, completeness,
    ```bash
    npm install
    ```
+3. Create a `.env` file with your Cloudflare credentials:
+   ```bash
+   CLOUDFLARE_ACCOUNT_ID="your-account-id"
+   CLOUDFLARE_API_TOKEN="your-api-token"
+   ```
 
 ## Usage
 
-### 1. Add a Tutorial
-
-Place the tutorial content (in markdown format) into `tutorials/current.md`:
+Simply pass the URL of the tutorial you want to analyze:
 
 ```bash
-# Manually paste content, or use a tool to fetch it
-cat your-tutorial.md > tutorials/current.md
-```
-
-### 2. Run the Tutorial Checker
-
-```bash
-npm start
+npm start https://developers.cloudflare.com/ai-gateway/get-started/
 ```
 
 The agent will:
-1. Read the tutorial from `tutorials/current.md`
-2. Analyze the content comprehensively
-3. Generate a detailed review at `attempts/overview.md`
+1. Fetch the tutorial content using Cloudflare Browser Rendering
+2. Convert it to markdown and save in `fetched/`
+3. Analyze the content comprehensively
+4. Generate a detailed review in `reviews/`
 
-### 3. Review the Results
+## Example
 
-Check `attempts/overview.md` for the complete analysis including:
+```bash
+npm start https://developers.cloudflare.com/workers/get-started/guide/
+```
+
+Output files:
+- `fetched/developers-cloudflare-com-workers-get-started-2025-10-23-164406.md`
+- `reviews/developers-cloudflare-com-workers-get-started-review-2025-10-23-164530.md`
+
+The review includes:
 - Tutorial metadata (title, complexity, audience)
 - Prerequisites assessment
 - Step-by-step analysis
@@ -95,14 +102,15 @@ The generated review includes sections like:
 tutorial-checker/
 ├── .claude/
 │   └── skills/
+│       ├── markdown-fetch/
+│       │   └── SKILL.md           # Markdown fetching skill
 │       └── tutorial-checker/
-│           └── SKILL.md           # Skill definition and instructions
+│           └── SKILL.md           # Tutorial analysis skill
 ├── src/
 │   └── index.ts                   # Main agent script
-├── tutorials/
-│   └── current.md                 # Input tutorial (you provide this)
-├── attempts/
-│   └── overview.md               # Generated review (created by agent)
+├── fetched/                       # Fetched markdown files (gitignored)
+├── reviews/                       # Generated reviews (gitignored)
+├── .env                          # Cloudflare credentials (gitignored)
 ├── package.json
 └── README.md
 ```
@@ -111,23 +119,45 @@ tutorial-checker/
 
 The agent is configured in `src/index.ts` with:
 
-- **Allowed Tools**: Read, Write, Edit
-- **Setting Sources**: user, local, project
+- **Allowed Tools**: Skill, Read, Write, Edit, WebSearch, Bash
+- **Setting Sources**: project
 - **Model**: Claude Sonnet 4.5 (via Agent SDK)
+
+## Skills
+
+This project uses two Claude Code skills:
+
+### markdown-fetch
+- Fetches web content using Cloudflare Browser Rendering
+- Converts HTML to clean markdown
+- Saves to `fetched/` directory
+
+### tutorial-checker
+- Analyzes tutorial content for quality and clarity
+- Rates complexity and identifies prerequisites
+- Generates detailed reviews in `reviews/` directory
 
 ## Development
 
-To modify the review format or analysis criteria:
+To modify the skills:
 
+**Tutorial analysis:**
 1. Edit `.claude/skills/tutorial-checker/SKILL.md`
 2. Update the review template and guidelines
-3. Run `npm start` to test changes
+3. Run `npm start <url>` to test changes
+
+**Markdown fetching:**
+1. Edit `.claude/skills/markdown-fetch/SKILL.md`
+2. Update the API endpoint or processing logic
+3. Run `npm start <url>` to test changes
 
 ## Requirements
 
 - Node.js 18.0.0 or later
 - Claude Agent SDK (installed via npm)
 - Valid Anthropic API credentials
+- Cloudflare account with Browser Rendering enabled
+- Cloudflare API token with Browser Rendering permissions
 
 ## License
 
