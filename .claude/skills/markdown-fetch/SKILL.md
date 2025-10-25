@@ -25,14 +25,15 @@ The user will provide a URL in their message. Extract the URL from the conversat
    - These are required for authenticating with Cloudflare Browser Rendering API
 
 3. **Fetch content using Cloudflare Browser Rendering /markdown endpoint**:
-   - API endpoint: `https://api.cloudflare.com/client/v4/accounts/{CLOUDFLARE_ACCOUNT_ID}/browser-rendering/markdown`
+   - API endpoint: `https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/browser-rendering/markdown`
    - Make a POST request with:
-     - Header: `Authorization: Bearer {CLOUDFLARE_API_TOKEN}`
+     - Header: `Authorization: Bearer $CLOUDFLARE_API_TOKEN`
+     - Header: `Content-Type: application/json`
      - Body: `{"url": "the-url-to-fetch"}`
-   - The response will contain markdown-formatted content
+   - The response will be JSON with the markdown in the `result` property
 
 4. **Process and save the result**:
-   - Extract the markdown from the API response
+   - Parse the JSON response and extract the markdown from the `result` property
    - Create `fetched/` directory at the project root if it doesn't exist
    - Save to `fetched/{sanitized-domain}-{timestamp}.md` (at project root)
    - Display a preview of the content
@@ -42,12 +43,15 @@ The user will provide a URL in their message. Extract the URL from the conversat
 1. Use the Read tool to load `.env` file and extract credentials
 2. Use Bash with curl to call the Cloudflare API:
    ```bash
-   curl -X POST "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/browser/v2/markdown" \
-     -H "Authorization: Bearer ${API_TOKEN}" \
+   curl -X POST "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/browser/browser-rendering/markdown" \
+     -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
      -H "Content-Type: application/json" \
      -d '{"url": "https://example.com"}'
    ```
-3. Parse the JSON response to extract the markdown content
+3. Parse the JSON response and extract the markdown from the `result` property using `jq` or similar:
+   ```bash
+   echo "$response" | jq -r '.result'
+   ```
 4. Save the markdown to the `fetched/` directory
 5. Display a summary and preview
 
