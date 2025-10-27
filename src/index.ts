@@ -27,9 +27,9 @@ async function main() {
     // Run the agent using the query API
     // First fetch the markdown, then run the tutorial checker on the result
     const prompt = `
-First, use /markdown-fetch to fetch the content from: ${url}
+First, use the skill markdown-fetch to fetch the content from: ${url}
 
-Then, use /tutorial-checker to analyze the markdown file that was just created.
+Then, use the skill tutorial-checker to analyze the markdown file that was just created.
 The markdown file will be in the fetched/ directory.
 `.trim();
 

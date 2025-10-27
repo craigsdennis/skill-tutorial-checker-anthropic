@@ -26,9 +26,7 @@ The user will provide a file path to the tutorial markdown file in their message
    - Any gaps or unclear sections
 
 3. **Create a review document** with the following sections:
-   - Create a `reviews/` directory at the project root if it doesn't exist
-   - Save to `reviews/{sanitized-filename}-review-{timestamp}.md` (at project root)
-   - Use the same timestamp format as markdown-fetch: YYYY-MM-DD-HHMMSS
+   - Save to `review.md` (at project root)
 
    ### Tutorial Review
 
@@ -79,5 +77,3 @@ The user will provide a file path to the tutorial markdown file in their message
 - Note any external knowledge required that isn't explained
 - Suggest specific improvements where possible
 - If prerequisites lack links, search for and suggest quality learning resources
-
-
