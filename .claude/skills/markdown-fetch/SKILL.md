@@ -42,7 +42,7 @@ The user will provide a URL in their message. Extract the URL from the conversat
 1. Use the Read tool to load `.env` file and extract credentials
 2. Use Bash with curl to call the Cloudflare API:
    ```bash
-   curl -X POST "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/browser/browser-rendering/markdown" \
+   curl -X POST "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/browser-rendering/markdown" \
      -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
      -H "Content-Type: application/json" \
      -d '{"url": "https://example.com"}'
