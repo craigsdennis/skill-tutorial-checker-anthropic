@@ -3,13 +3,26 @@ import { query } from "@anthropic-ai/claude-agent-sdk";
 
 /**
  * Recursively redacts environment variable values from an object
+ * Only redacts values for env vars with names suggesting they're sensitive
  * @param obj - The object to redact values from
  * @returns A new object with env values replaced by [REDACTED]
  */
 function redactEnvValues(obj: any): any {
-  // Get all env values to check against (filter out empty values)
+  // Keywords that indicate a sensitive environment variable
+  const sensitiveKeywords = [
+    'KEY', 'TOKEN', 'SECRET', 'PASSWORD', 'API',
+    'ACCOUNT', 'CREDENTIAL', 'AUTH', 'PRIVATE'
+  ];
+
+  // Only collect values from env vars with sensitive names
   const envValues = new Set(
-    Object.values(process.env).filter((v) => v && v.length > 0)
+    Object.entries(process.env)
+      .filter(([key, value]) => {
+        if (!value || value.length === 0) return false;
+        const upperKey = key.toUpperCase();
+        return sensitiveKeywords.some(keyword => upperKey.includes(keyword));
+      })
+      .map(([_, value]) => value)
   );
 
   function redact(value: any): any {
@@ -97,7 +110,7 @@ The markdown file will be in the fetched.md file in the root.
     console.log("\n" + "=".repeat(60));
     console.log("Analysis Complete!");
     console.log("=".repeat(60));
-    console.log("\nReview document saved to: reviews/");
+    console.log("\nReview document saved to: review.md");
   } catch (error) {
     console.error("\n❌ Failed to analyze tutorial:");
     console.error(error);
