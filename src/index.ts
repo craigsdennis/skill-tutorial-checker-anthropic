@@ -2,6 +2,49 @@
 import { query } from "@anthropic-ai/claude-agent-sdk";
 
 /**
+ * Recursively redacts environment variable values from an object
+ * @param obj - The object to redact values from
+ * @returns A new object with env values replaced by [REDACTED]
+ */
+function redactEnvValues(obj: any): any {
+  // Get all env values to check against (filter out empty values)
+  const envValues = new Set(
+    Object.values(process.env).filter((v) => v && v.length > 0)
+  );
+
+  function redact(value: any): any {
+    if (typeof value === "string") {
+      // Check if this string contains any env value and redact it
+      let redacted = value;
+      for (const envVal of envValues) {
+        if (envVal && redacted.includes(envVal)) {
+          redacted = redacted.replace(new RegExp(escapeRegExp(envVal), "g"), "[REDACTED]");
+        }
+      }
+      return redacted;
+    } else if (Array.isArray(value)) {
+      return value.map(redact);
+    } else if (typeof value === "object" && value !== null) {
+      const result: any = {};
+      for (const key in value) {
+        result[key] = redact(value[key]);
+      }
+      return result;
+    }
+    return value;
+  }
+
+  return redact(obj);
+}
+
+/**
+ * Escapes special regex characters in a string
+ */
+function escapeRegExp(string: string): string {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/**
  * Tutorial Checker Agent
  *
  * This agent fetches a tutorial from a URL and creates a detailed review.
@@ -30,7 +73,7 @@ async function main() {
 First, use the skill markdown-fetch to fetch the content from: ${url}
 
 Then, use the skill tutorial-checker to analyze the markdown file that was just created.
-The markdown file will be in the fetched/ directory.
+The markdown file will be in the fetched.md file in the root.
 `.trim();
 
     for await (const message of query({
@@ -45,8 +88,9 @@ The markdown file will be in the fetched/ directory.
       // Stream output to console
       // The message structure from query() returns different types
       if (message && typeof message === "object") {
-        // Handle different message types appropriately on the other end
-        console.log(JSON.stringify(message));
+        // Redact any environment variable values before logging
+        const redactedMessage = redactEnvValues(message);
+        console.log(JSON.stringify(redactedMessage));
       }
     }
 

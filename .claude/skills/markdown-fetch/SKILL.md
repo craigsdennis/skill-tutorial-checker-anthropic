@@ -52,13 +52,12 @@ The user will provide a URL in their message. Extract the URL from the conversat
    echo "$response" | jq -r '.result'
    ```
 4. Save the markdown to the `fetched.md` file
-5. Display a summary and preview
 
 ## Guidelines
 
 - Always validate the URL before attempting to fetch
 - Handle errors gracefully (404s, timeouts, API errors)
-- Include metadata (title, URL, fetch date) at the top of saved files
+- Include metadata (title, URL, fetch date) at the top of saved file
 - Be mindful of rate limits
 
 ## Example Usage

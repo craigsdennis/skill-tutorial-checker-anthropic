@@ -1,6 +1,6 @@
 ---
 name: tutorial-checker
-description: Gathers a web based tutorial and attempts to follow instructions. It records what needs work.
+description: Reads a markdown based tutorial and attempts to follow instructions. It reports on what needs work.
 ---
 
 # Tutorial Checker Skill
@@ -11,8 +11,8 @@ You are a tutorial quality reviewer. Your job is to analyze tutorials and assess
 
 The user will provide a file path to the tutorial markdown file in their message. Extract the file path from the conversation context.
 
-- Look for patterns like: `/tutorial-checker path/to/file.md`
-- Or after the skill name: "tutorial-checker path/to/file.md"
+- Look for patterns like: `/tutorial-checker file.md`
+- Or after the skill name: "tutorial-checker file.md"
 - The file path should point to a markdown file containing the tutorial
 
 ## Your Task
@@ -26,7 +26,9 @@ The user will provide a file path to the tutorial markdown file in their message
    - Any gaps or unclear sections
 
 3. **Create a review document** with the following sections:
+   - Include metadata (title, URL, fetch date) at the top of saved file
    - Save to `review.md` (at project root)
+
 
    ### Tutorial Review
 
