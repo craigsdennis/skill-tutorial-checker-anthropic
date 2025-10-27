@@ -87,6 +87,7 @@ First, use the skill markdown-fetch to fetch the content from: ${url}
 
 Then, use the skill tutorial-checker to analyze the markdown file that was just created.
 The markdown file will be in the fetched.md file in the root.
+Current date is ${new Date().toDateString()}.
 `.trim();
 
     for await (const message of query({
