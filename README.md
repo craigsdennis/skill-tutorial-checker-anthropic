@@ -2,6 +2,8 @@
 
 An AI-powered tutorial quality reviewer that fetches web tutorials using Cloudflare Browser Rendering and creates comprehensive review documents.
 
+This is an example repo used for [Claude in the Box](https://github.com/craigsdennis/claude-in-the-box) which is used to host Anthropic Agents.
+
 ## Overview
 
 This agent uses Claude with Cloudflare Browser Rendering to fetch tutorials from URLs and assess their clarity, completeness, and usability. It generates detailed reviews including complexity ratings, prerequisite analysis, step-by-step breakdowns, and recommendations for improvement.
@@ -30,6 +32,8 @@ This agent uses Claude with Cloudflare Browser Rendering to fetch tutorials from
    CLOUDFLARE_API_TOKEN="your-api-token"
    ```
 
+   __NOTE__: Ensure you use an id and token that has Browser Rendering permissions
+
 ## Usage
 
 Simply pass the URL of the tutorial you want to analyze:
@@ -40,9 +44,9 @@ npm start https://developers.cloudflare.com/ai-gateway/get-started/
 
 The agent will:
 1. Fetch the tutorial content using Cloudflare Browser Rendering
-2. Convert it to markdown and save in `fetched/`
+2. Convert it to markdown and save in `fetched.md`
 3. Analyze the content comprehensively
-4. Generate a detailed review in `reviews/`
+4. Generate a detailed review in `reviews.md`
 
 ## Example
 
@@ -51,8 +55,8 @@ npm start https://developers.cloudflare.com/workers/get-started/guide/
 ```
 
 Output files:
-- `fetched/developers-cloudflare-com-workers-get-started-2025-10-23-164406.md`
-- `reviews/developers-cloudflare-com-workers-get-started-review-2025-10-23-164530.md`
+- `fetched.md`
+- `reviews.md`
 
 The review includes:
 - Tutorial metadata (title, complexity, audience)
@@ -96,25 +100,6 @@ The generated review includes sections like:
 ...
 ```
 
-## Project Structure
-
-```
-tutorial-checker/
-├── .claude/
-│   └── skills/
-│       ├── markdown-fetch/
-│       │   └── SKILL.md           # Markdown fetching skill
-│       └── tutorial-checker/
-│           └── SKILL.md           # Tutorial analysis skill
-├── src/
-│   └── index.ts                   # Main agent script
-├── fetched/                       # Fetched markdown files (gitignored)
-├── reviews/                       # Generated reviews (gitignored)
-├── .env                          # Cloudflare credentials (gitignored)
-├── package.json
-└── README.md
-```
-
 ## Configuration
 
 The agent is configured in `src/index.ts` with:
@@ -130,12 +115,12 @@ This project uses two Claude Code skills:
 ### markdown-fetch
 - Fetches web content using Cloudflare Browser Rendering
 - Converts HTML to clean markdown
-- Saves to `fetched/` directory
+- Saves to `fetched.md`
 
 ### tutorial-checker
 - Analyzes tutorial content for quality and clarity
 - Rates complexity and identifies prerequisites
-- Generates detailed reviews in `reviews/` directory
+- Generates detailed reviews in `reviews.md` directory
 
 ## Development
 
@@ -158,11 +143,3 @@ To modify the skills:
 - Valid Anthropic API credentials
 - Cloudflare account with Browser Rendering enabled
 - Cloudflare API token with Browser Rendering permissions
-
-## License
-
-ISC
-
-## Author
-
-Craig Dennis (craig@cloudflare.com) 
